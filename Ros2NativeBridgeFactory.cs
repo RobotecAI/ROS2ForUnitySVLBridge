@@ -34,21 +34,21 @@ namespace Simulator.Bridge
                 }
             );
 
-            // RegPublisher<ImageData, Ros.CompressedImage>(plugin, Ros2Conversions.ConvertFrom);
-            // RegPublisher<Detected3DObjectData, Lgsvl.Detection3DArray>(plugin, Ros2Conversions.ConvertFrom);
-            // RegPublisher<Detected2DObjectData, Lgsvl.Detection2DArray>(plugin, Ros2Conversions.ConvertFrom);
-            // RegPublisher<SignalDataArray, Lgsvl.SignalArray>(plugin, Ros2Conversions.ConvertFrom);
-            // RegPublisher<CanBusData, Lgsvl.CanBusData>(plugin, Ros2Conversions.ConvertFrom);
-            // RegPublisher<UltrasonicData, Lgsvl.Ultrasonic>(plugin, Ros2Conversions.ConvertFrom);
+            RegPublisher<ImageData, sensor_msgs.msg.CompressedImage>(plugin, Ros2NativeConversions.ConvertFrom);
+            // RegPublisher<Detected3DObjectData, Lgsvl.Detection3DArray>(plugin, Ros2NativeConversions.ConvertFrom);
+            // RegPublisher<Detected2DObjectData, Lgsvl.Detection2DArray>(plugin, Ros2NativeConversions.ConvertFrom);
+            // RegPublisher<SignalDataArray, Lgsvl.SignalArray>(plugin, Ros2NativeConversions.ConvertFrom);
+            RegPublisher<CanBusData, autoware_auto_msgs.msg.VehicleStateReport>(plugin, Ros2NativeConversions.ConvertFrom);
+            // RegPublisher<UltrasonicData, Lgsvl.Ultrasonic>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<GpsData, sensor_msgs.msg.NavSatFix>(plugin, Ros2NativeConversions.ConvertFrom);
-            // RegPublisher<GpsOdometryData, Ros.Odometry>(plugin, Ros2Conversions.ConvertFrom);
-            // RegPublisher<ImuData, Ros.Imu>(plugin, Ros2Conversions.ConvertFrom);
-            // RegPublisher<ClockData, Ros.Clock>(plugin, Ros2Conversions.ConvertFrom);
+            RegPublisher<GpsOdometryData, nav_msgs.msg.Odometry>(plugin, Ros2NativeConversions.ConvertFrom);
+            RegPublisher<ImuData, sensor_msgs.msg.Imu>(plugin, Ros2NativeConversions.ConvertFrom);
+            RegPublisher<ClockData, rosgraph_msgs.msg.Clock>(plugin, Ros2NativeConversions.ConvertFrom);
 
-            // RegSubscriber<VehicleStateData, Lgsvl.VehicleStateData>(plugin, Ros2Conversions.ConvertTo);
-            // RegSubscriber<VehicleControlData, Lgsvl.VehicleControlData>(plugin, Ros2Conversions.ConvertTo);
-            // RegSubscriber<Detected2DObjectArray, Lgsvl.Detection2DArray>(plugin, Ros2Conversions.ConvertTo);
-            // RegSubscriber<Detected3DObjectArray, Lgsvl.Detection3DArray>(plugin, Ros2Conversions.ConvertTo);
+            // RegSubscriber<VehicleStateData, Lgsvl.VehicleStateData>(plugin, Ros2NativeConversions.ConvertTo);
+            // RegSubscriber<VehicleControlData, Lgsvl.VehicleControlData>(plugin, Ros2NativeConversions.ConvertTo);
+            // RegSubscriber<Detected2DObjectArray, Lgsvl.Detection2DArray>(plugin, Ros2NativeConversions.ConvertTo);
+            // RegSubscriber<Detected3DObjectArray, Lgsvl.Detection3DArray>(plugin, Ros2NativeConversions.ConvertTo);
         }
         public void RegPublisher<DataType, BridgeType>(IBridgePlugin plugin, Func<DataType, BridgeType> converter)
         {   
