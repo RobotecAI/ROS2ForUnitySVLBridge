@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Simulator.Bridge.Data;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace Simulator.Bridge
 {
@@ -20,9 +21,65 @@ namespace Simulator.Bridge
             };
         }
 
+        public static double Convert(builtin_interfaces.msg.Time time)
+        {
+            return (double)time.Sec + (double)time.Nanosec * 1e-9;
+        }
+
         static geometry_msgs.msg.Quaternion Convert(UnityEngine.Quaternion q)
         {
             return new geometry_msgs.msg.Quaternion() { X = q.x, Y = q.y, Z = q.z, W = q.w };
+        }
+
+        static geometry_msgs.msg.Vector3 Convert(UnityEngine.Vector3 v)
+        {
+            return new geometry_msgs.msg.Vector3() { X = v.x, Y = v.y, Z = v.z };
+        }
+
+        public static VehicleControlData ConvertTo(lgsvl_msgs.msg.VehicleControlData data)
+        {
+            float Deg2Rad = UnityEngine.Mathf.Deg2Rad;
+            float MaxSteeringAngle = 39.4f * Deg2Rad;
+            float wheelAngle = 0f;
+
+            if (data.Target_wheel_angle > MaxSteeringAngle)
+            {
+                wheelAngle = MaxSteeringAngle;
+            }
+            else if (data.Target_wheel_angle < -MaxSteeringAngle)
+            {
+                wheelAngle = -MaxSteeringAngle;
+            }
+
+            // ratio between -MaxSteeringAngle and MaxSteeringAngle
+            var k = (float)(wheelAngle + MaxSteeringAngle) / (MaxSteeringAngle*2);
+
+            // target_wheel_angular_rate, target_gear are not supported on simulator side.
+
+            return new VehicleControlData()
+            {
+                TimeStampSec = Convert(data.Header.Stamp),
+                Acceleration = data.Acceleration_pct,
+                Braking = data.Braking_pct,
+                SteerAngle = UnityEngine.Mathf.Lerp(-1f, 1f, k),
+
+            };
+        }
+
+        public static VehicleStateData ConvertTo(lgsvl_msgs.msg.VehicleStateData data)
+        {
+            return new VehicleStateData()
+            {
+                Time = Convert(data.Header.Stamp),
+                Blinker = (byte) data.Blinker_state,
+                HeadLight = (byte) data.Headlight_state,
+                Wiper = (byte) data.Wiper_state,
+                Gear = (byte) data.Current_gear,
+                Mode = (byte) data.Vehicle_mode,
+                HandBrake = data.Hand_brake_active,
+                Horn = data.Horn_active,
+                Autonomous = data.Autonomous_mode_active,
+            };
         }
 
         public static sensor_msgs.msg.CompressedImage ConvertFrom(ImageData data)
@@ -112,70 +169,37 @@ namespace Simulator.Bridge
             return msg;
         }
 
-        public static autoware_auto_msgs.msg.VehicleStateReport ConvertFrom(CanBusData data)
+        public static lgsvl_msgs.msg.CanBusData ConvertFrom(CanBusData data)
         {
-
-            // No fuel supported in Simulator side
-            byte fuel = 0;
-
-            // Blinker
-            // BLINKER_OFF = 0, BLINKER_LEFT = 1, BLINKER_RIGHT = 2, BLINKER_HAZARD = 3
-            // No Hazard Light in Simulator side
-            byte blinker = 0;
-            if (data.HazardLights)
-                blinker = 3;
-            else if (data.LeftTurnSignal)
-                blinker = 1;
-            else if (data.RightTurnSignal)
-                blinker = 2;
-
-            // Headlight
-            // HEADLIGHT_OFF = 0, HEADLIGHT_ON = 1, HEADLIGHT_HIGH = 2
-            byte headlight = 0;
-            if (data.LowBeamSignal)
-                headlight = 1;
-            else if (data.HighBeamSignal)
-                headlight = 2;
-            else
-                headlight = 0;
-
-            // Wiper
-            // WIPER_OFF = 0, WIPER_LOW = 1, WIPER_HIGH = 2, WIPER_CLEAN = 3
-            // No WIPER_HIGH and WIPER_CLEAN in Simulator side
-            byte wiper = 0;
-            if (data.Wipers)
-                wiper = 1;
-
-            // Gear
-            // GEAR_DRIVE = 0, GEAR_REVERSE = 1, GEAR_PARK = 2, GEAR_LOW = 3, GEAR_NEUTRAL = 4
-            // No GEAR_PARK, GEAR_LOW, GEAR_NEUTRAL in Simulator side
-            byte gear = 0;
-            if (data.InReverse)
-                gear = 1;
-            else
-                gear = 0;
-
-            // Mode
-            // No information about mode in Simulator side.
-            byte mode = 0;
-
-            // Hand Brake
-            bool handBrake = false;
-
-            // Horn
-            bool horn = false;
             var time = ConvertTime(data.Time);
-            return new autoware_auto_msgs.msg.VehicleStateReport()
+            var orientation = Convert(data.Orientation);
+            var velocities = Convert(data.Velocity);
+            return new lgsvl_msgs.msg.CanBusData()
             {
-                Stamp = time,
-                Fuel = fuel,
-                Blinker = blinker,
-                Headlight = headlight,
-                Wiper = wiper,
-                Gear = gear,
-                Mode = mode,
-                Hand_brake = handBrake,
-                Horn = horn,
+                Header = new std_msgs.msg.Header()
+                {
+                    Stamp = time,
+                    Frame_id = data.Frame,
+                },
+                Fog_lights_active = data.FogLights,
+                Left_turn_signal_active = data.LeftTurnSignal,
+                Right_turn_signal_active = data.RightTurnSignal,
+                Wipers_active = data.Wipers,
+                Selected_gear = (sbyte)data.Gear,
+                Gps_latitude = data.Latitude,
+                Gps_longitude = data.Longitude,
+                Gps_altitude = data.Altitude,
+                Engine_rpm = data.EngineRPM,
+                Hazard_lights_active = data.HazardLights,
+                Orientation = orientation,
+                Linear_velocities = velocities,
+                Engine_active = data.EngineOn,
+                Low_beams_active = data.LowBeamSignal,
+                Steer_pct = data.Steering,
+                Parking_brake_active = data.ParkingBrake,
+                Throttle_pct = data.Throttle,
+                Speed_mps = data.Speed,
+                High_beams_active = data.HighBeamSignal
             };
         }
 

@@ -38,15 +38,15 @@ namespace Simulator.Bridge
             // RegPublisher<Detected3DObjectData, Lgsvl.Detection3DArray>(plugin, Ros2NativeConversions.ConvertFrom);
             // RegPublisher<Detected2DObjectData, Lgsvl.Detection2DArray>(plugin, Ros2NativeConversions.ConvertFrom);
             // RegPublisher<SignalDataArray, Lgsvl.SignalArray>(plugin, Ros2NativeConversions.ConvertFrom);
-            RegPublisher<CanBusData, autoware_auto_msgs.msg.VehicleStateReport>(plugin, Ros2NativeConversions.ConvertFrom);
+            RegPublisher<CanBusData, lgsvl_msgs.msg.CanBusData>(plugin, Ros2NativeConversions.ConvertFrom);
             // RegPublisher<UltrasonicData, Lgsvl.Ultrasonic>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<GpsData, sensor_msgs.msg.NavSatFix>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<GpsOdometryData, nav_msgs.msg.Odometry>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<ImuData, sensor_msgs.msg.Imu>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<ClockData, rosgraph_msgs.msg.Clock>(plugin, Ros2NativeConversions.ConvertFrom);
 
-            // RegSubscriber<VehicleStateData, Lgsvl.VehicleStateData>(plugin, Ros2NativeConversions.ConvertTo);
-            // RegSubscriber<VehicleControlData, Lgsvl.VehicleControlData>(plugin, Ros2NativeConversions.ConvertTo);
+            RegSubscriber<VehicleStateData, lgsvl_msgs.msg.VehicleStateData>(plugin, Ros2NativeConversions.ConvertTo);
+            RegSubscriber<VehicleControlData, lgsvl_msgs.msg.VehicleControlData>(plugin, Ros2NativeConversions.ConvertTo);
             // RegSubscriber<Detected2DObjectArray, Lgsvl.Detection2DArray>(plugin, Ros2NativeConversions.ConvertTo);
             // RegSubscriber<Detected3DObjectArray, Lgsvl.Detection3DArray>(plugin, Ros2NativeConversions.ConvertTo);
         }
@@ -66,12 +66,12 @@ namespace Simulator.Bridge
 
         public void RegSubscriber<DataType, BridgeType>(IBridgePlugin plugin, Func<BridgeType, DataType> converter)
         {
-            // plugin.AddType<DataType>(Ros2Utils.GetMessageType<BridgeType>());
-            // plugin.AddSubscriberCreator<DataType>(
-            //     (instance, topic, callback) => (instance as Ros2BridgeInstance).AddSubscriber<BridgeType>(topic,
-            //         rawData => callback(converter(Ros2Serialization.Unserialize<BridgeType>(rawData)))
-            //     )
-            // );
+            plugin.AddType<DataType>(typeof(DataType).Name);
+            plugin.AddSubscriberCreator<DataType>(
+                (instance, topic, callback) => (instance as Ros2NativeBridgeInstance).AddSubscriber<BridgeType>(topic,
+                    (data) => callback(converter(data))
+                )
+            );
         }
     }
 }
