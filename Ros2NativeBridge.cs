@@ -27,34 +27,28 @@ namespace Simulator.Bridge
         
         public Ros2NativeBridgeInstance()
         {
-            Debug.Log("Instance of native bridge");
-
             Ros2Native.ROS2Node.CheckROSRMWSourced();
             Ros2Native.ROS2Node.CheckROSVersionSourced();
 
             ROS2.Ros2cs.Init();
             ros2UnityNode = new ROS2Unity();
-            Debug.Log("Using " + ROS2.Ros2cs.GetRMWImplementationID() + " rmw.");
+            Debug.Log("Using " + ROS2.Ros2cs.GetRMWImplementationID() + " rmw for ROS2 transport.");
         }
 
         void WaitForRos2()
         {
-            Debug.Log("Wait for ros2");
             while (!ros2UnityNode.Ok())
             {
                 Thread.Sleep(200);
             };
-            Debug.Log("Wait for ros2 ended");
         }
 
         public void Connect(string connection)
         {
-            Debug.Log("Native connect");
             ros2UnityNode.Run();
 
             WaitForRos2();
-            Status = Status.Connected; 
-            Debug.Log("Native connected");
+            Status = Status.Connected;
         }
 
         public void Disconnect()
@@ -127,8 +121,6 @@ namespace Simulator.Bridge
             }
             return;
         }
-
-
 
         public void Publish<BridgeType>(string topic, BridgeType msg)
         {
