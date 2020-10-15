@@ -1,3 +1,8 @@
+/**
+ * Copyright 2019-2020, Robotec.ai sp z o.o.
+ * Authors: piotr.jaroszek@robotec.ai, adam.dabrowski@robotec.ai
+ */
+
 using System;
 using System.Text;
 
@@ -120,7 +125,7 @@ namespace Simulator.Bridge
             };
             msg.Data = new byte[count * 32];
             System.Buffer.BlockCopy(Buffer, 0, msg.Data, 0, count * 32);
-            
+
             Writer.Write(msg, completed);
         }
     }

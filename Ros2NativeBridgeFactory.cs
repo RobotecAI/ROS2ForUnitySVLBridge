@@ -1,8 +1,6 @@
 /**
- * Copyright (c) 2019 LG Electronics, Inc.
- *
- * This software contains code licensed as described in LICENSE.
- *
+ * Copyright 2019-2020, Robotec.ai sp z o.o.
+ * Authors: piotr.jaroszek@robotec.ai, adam.dabrowski@robotec.ai
  */
 
 using System;
@@ -17,11 +15,11 @@ namespace Simulator.Bridge
     public class Ros2NativeBridgeFactory : IBridgeFactory
     {
         public IBridgeInstance CreateInstance() => new Ros2NativeBridgeInstance();
-        
+
         public void Register(IBridgePlugin plugin)
         {
             Debug.Log("Register native bridge");
-            
+
             // point cloud is special, as we use special writer for performance reasons
             plugin.AddType<PointCloudData>(typeof(PointCloudData).Name);
             plugin.AddPublisherCreator(
@@ -46,7 +44,7 @@ namespace Simulator.Bridge
         }
 
         public void RegPublisher<DataType, BridgeType>(IBridgePlugin plugin, Func<DataType, BridgeType> converter)
-        {   
+        {
             plugin.AddType<DataType>(typeof(DataType).Name);
             plugin.AddPublisherCreator(
                 (instance, topic) =>

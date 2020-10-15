@@ -1,3 +1,7 @@
+/**
+ * Copyright 2019-2020, Robotec.ai sp z o.o.
+ */
+
 using ROS2;
 using System;
 using UnityEngine;
@@ -15,6 +19,23 @@ namespace Ros2Native
         public static bool isInitialized = false;
 
         private double timeout = 0.001;
+
+        public static void EnsureROS2PluginVisibility()
+        {
+#if UNITY_EDITOR
+            string currentLDPath = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH");
+
+            string pluginPath = Application.dataPath + "/Plugins/x86_64";
+
+            if (string.IsNullOrEmpty(currentLDPath) || !currentLDPath.Contains(pluginPath))
+            {
+                EditorApplication.isPlaying = false;
+                throw new System.InvalidOperationException("Missing library path to plugins in environment. Make sure your 'LD_LIBRARY_PATH' environment variable points to 'Assets/Plugins/x86_64' directory of this project.");
+
+                //NOTE: Setting LD_LIBRARY_PATH doesn't work at this stage unfortunately, even in static constructor.
+            }
+#endif
+        }
 
         public static void CheckROSVersionSourced()
         {

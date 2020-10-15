@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2020 LG Electronics, Inc.
- *
- * This software contains code licensed as described in LICENSE.
- *
+ * Copyright 2019-2020, Robotec.ai sp z o.o.
  */
 
 using System;
@@ -27,6 +24,7 @@ namespace Simulator.Bridge
         
         public Ros2NativeBridgeInstance()
         {
+            Ros2Native.ROS2Node.EnsureROS2PluginVisibility();
             Ros2Native.ROS2Node.CheckROSRMWSourced();
             Ros2Native.ROS2Node.CheckROSVersionSourced();
 

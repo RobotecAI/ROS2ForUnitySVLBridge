@@ -1,3 +1,7 @@
+/**
+ * Copyright 2019-2020, Robotec.ai sp z o.o.
+ */
+
 using UnityEngine;
 using System.Threading;
 
