@@ -1,5 +1,6 @@
 /**
  * Copyright 2019-2020, Robotec.ai sp z o.o.
+ * Authors: adam.dabrowski@robotec.ai, piotr.jaroszek@robotec.ai
  */
 
 using ROS2;

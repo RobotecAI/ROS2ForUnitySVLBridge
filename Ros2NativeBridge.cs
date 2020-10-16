@@ -1,5 +1,6 @@
 /**
  * Copyright 2019-2020, Robotec.ai sp z o.o.
+ * Authors: piotr.jaroszek@robotec.ai, adam.dabrowski@robotec.ai 
  */
 
 using System;
@@ -21,7 +22,7 @@ namespace Simulator.Bridge
         Dictionary<string, dynamic> Subscribers = new Dictionary<string, dynamic>();
 
         private ROS2Unity ros2UnityNode;
-        
+
         public Ros2NativeBridgeInstance()
         {
             Ros2Native.ROS2Node.EnsureROS2PluginVisibility();

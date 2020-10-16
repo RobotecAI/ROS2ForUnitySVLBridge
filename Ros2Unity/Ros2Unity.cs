@@ -1,5 +1,6 @@
 /**
  * Copyright 2019-2020, Robotec.ai sp z o.o.
+ * Authors: adam.dabrowski@robotec.ai, piotr.jaroszek@robotec.ai
  */
 
 using UnityEngine;
@@ -29,7 +30,7 @@ namespace Ros2Native
         }
 
         public void Destroy() {
-            if(node != null) 
+            if(node != null)
             {
                 node.DestroyNode();
             }
