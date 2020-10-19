@@ -44,7 +44,7 @@ namespace Simulator.Bridge
         {
             float Deg2Rad = UnityEngine.Mathf.Deg2Rad;
             float MaxSteeringAngle = 39.4f * Deg2Rad;
-            float wheelAngle = 0f;
+            float wheelAngle = data.Target_wheel_angle;
 
             if (data.Target_wheel_angle > MaxSteeringAngle)
             {
@@ -240,7 +240,7 @@ namespace Simulator.Bridge
             return imu;
         }
 
-       public static sensor_msgs.msg.NavSatFix ConvertFrom(GpsData data)
+        public static sensor_msgs.msg.NavSatFix ConvertFrom(GpsData data)
         {
             var time = ConvertTime(data.Time);
             var msg = new sensor_msgs.msg.NavSatFix()
