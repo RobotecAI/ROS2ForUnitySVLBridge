@@ -272,5 +272,24 @@ namespace Simulator.Bridge
             }
             return msg;
         }
+
+        public static lgsvl_msgs.msg.VehicleOdometry ConvertFrom(VehicleOdometryData data)
+        {
+            float Deg2Rad = UnityEngine.Mathf.Deg2Rad;
+            var time = ConvertTime(data.Time);
+            var odom = new lgsvl_msgs.msg.VehicleOdometry()
+            {
+                Header = new std_msgs.msg.Header()
+                {
+                    Stamp = time
+                },
+
+                Velocity = data.Speed,
+                Front_wheel_angle = data.SteeringAngleFront * Deg2Rad,
+                Rear_wheel_angle = data.SteeringAngleBack * Deg2Rad
+            };
+
+            return odom;
+        }
     }
 }

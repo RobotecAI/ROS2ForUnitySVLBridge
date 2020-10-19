@@ -117,6 +117,10 @@ namespace Simulator.Bridge
             {
                 var publisher = ros2UnityNode.node.CreatePublisher<rosgraph_msgs.msg.Clock>(topic);
                 Publishers.Add(topic, publisher);
+            } else if (type == typeof(lgsvl_msgs.msg.VehicleOdometry))
+            {
+                var publisher = ros2UnityNode.node.CreatePublisher<lgsvl_msgs.msg.VehicleOdometry>(topic);
+                Publishers.Add(topic, publisher);
             }
             return;
         }

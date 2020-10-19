@@ -38,6 +38,7 @@ namespace Simulator.Bridge
             RegPublisher<GpsOdometryData, nav_msgs.msg.Odometry>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<ImuData, sensor_msgs.msg.Imu>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<ClockData, rosgraph_msgs.msg.Clock>(plugin, Ros2NativeConversions.ConvertFrom);
+            RegPublisher<VehicleOdometryData, lgsvl_msgs.msg.VehicleOdometry>(plugin, Ros2NativeConversions.ConvertFrom);
 
             RegSubscriber<VehicleStateData, lgsvl_msgs.msg.VehicleStateData>(plugin, Ros2NativeConversions.ConvertTo);
             RegSubscriber<VehicleControlData, lgsvl_msgs.msg.VehicleControlData>(plugin, Ros2NativeConversions.ConvertTo);
