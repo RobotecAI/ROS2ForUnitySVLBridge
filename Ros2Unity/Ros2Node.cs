@@ -41,7 +41,7 @@ namespace Ros2Native
         public static void CheckROSVersionSourced()
         {
             string currentVersion = Environment.GetEnvironmentVariable("ROS_DISTRO");
-            const string supportedVersion = "dashing";
+            const string supportedVersion = "foxy";
             if (string.IsNullOrEmpty(currentVersion))
             {
                 string errMessage = "No ROS environment sourced. You need to source your ROS2 " + supportedVersion + " environment before launching simulator.";
