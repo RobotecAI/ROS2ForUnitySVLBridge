@@ -190,6 +190,7 @@ namespace Simulator.Bridge
                 Right_turn_signal_active = data.RightTurnSignal,
                 Wipers_active = data.Wipers,
                 Selected_gear = (sbyte)data.Gear,
+                Reverse_gear_active = data.InReverse,
                 Gps_latitude = data.Latitude,
                 Gps_longitude = data.Longitude,
                 Gps_altitude = data.Altitude,
