@@ -79,7 +79,8 @@ namespace Simulator.Bridge
             } else if (data.Current_gear == (byte)GearPosition.Reverse) {
                 gear_corrected = 1;
             } else {
-                gear_corrected = 0;
+                // Just any value other than 0 and 1
+                gear_corrected = 3;
             }
 
             return new VehicleStateData()
