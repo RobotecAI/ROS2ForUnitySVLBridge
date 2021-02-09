@@ -72,13 +72,23 @@ namespace Simulator.Bridge
 
         public static VehicleStateData ConvertTo(lgsvl_msgs.msg.VehicleStateData data)
         {
+            // Vehicle state sensor supports only Drive and Reverse. Drive is 0 and Reverse is 1
+            byte gear_corrected;
+            if (data.Current_gear == (byte)GearPosition.Drive) {
+                gear_corrected = 0;
+            } else if (data.Current_gear == (byte)GearPosition.Reverse) {
+                gear_corrected = 1;
+            } else {
+                gear_corrected = 0;
+            }
+
             return new VehicleStateData()
             {
                 Time = Convert(data.Header.Stamp),
                 Blinker = (byte) data.Blinker_state,
                 HeadLight = (byte) data.Headlight_state,
                 Wiper = (byte) data.Wiper_state,
-                Gear = (byte) data.Current_gear,
+                Gear = gear_corrected,
                 Mode = (byte) data.Vehicle_mode,
                 HandBrake = data.Hand_brake_active,
                 Horn = data.Horn_active,
@@ -178,6 +188,14 @@ namespace Simulator.Bridge
             var time = ConvertTime(data.Time);
             var orientation = Convert(data.Orientation);
             var velocities = Convert(data.Velocity);
+            
+            sbyte gear;
+            if (data.InReverse) {
+                gear = (sbyte)GearPosition.Reverse;
+            } else {
+                gear = (sbyte)GearPosition.Drive;
+            }
+
             return new lgsvl_msgs.msg.CanBusData()
             {
                 Header = new std_msgs.msg.Header()
@@ -189,7 +207,7 @@ namespace Simulator.Bridge
                 Left_turn_signal_active = data.LeftTurnSignal,
                 Right_turn_signal_active = data.RightTurnSignal,
                 Wipers_active = data.Wipers,
-                Selected_gear = (sbyte)data.Gear,
+                Selected_gear = gear,
                 Reverse_gear_active = data.InReverse,
                 Gps_latitude = data.Latitude,
                 Gps_longitude = data.Longitude,
