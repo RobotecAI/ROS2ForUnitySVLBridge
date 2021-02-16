@@ -10,15 +10,15 @@ This plugin relies on binaries `plugins.zip` included in this repository.
 
 To start developing `Ros2NativeBridge` with Unity Editor:
 
-1. Make sure you have LGSVL simulatior version 2020.06 or higher (see https://www.lgsvlsimulator.com/docs/build-instructions/ for more instructions about getting and launching LGSVL project).
+1. Make sure you have LGSVL simulatior version 2020.06 (see https://www.lgsvlsimulator.com/docs/build-instructions/ for more instructions about getting and launching LGSVL project).
 2. Copy contents of this repository into `Assets/External/Bridges/Ros2NativeBridge` folder of LGSVL simulator Unity project.
-3. Unzip required binaries from `plugins.zip` to `Assets/Plugins` - you can use `deploy_unity_plugins.sh` scripts to do that for you:
+3. Unzip required binaries from `plugins.zip` to `Assets/Plugins` - you can use `deploy_unity_plugins.sh` script to do that for you:
 ```bash
 cd Assets/External/Bridges/Ros2NativeBridge
 ./deploy_unity_plugins.sh
 ```
 
-Use `Ros2NativeBridgeInstance` class to implement or change interface and `Ros2NativeConversions` to add or modify existing conversions between LGSVL sensors and ROS2 messages.
+Use `Ros2NativeBridgeInstance` and `Ros2NativeBridgeFactory` classes to implement or change interface and `Ros2NativeConversions` to add or modify existing conversions between LGSVL sensors and ROS2 messages.
 
 Building a simulator release with `Ros2NativeBridge` plugin:
 
@@ -30,7 +30,7 @@ Building a simulator release with `Ros2NativeBridge` plugin:
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ```
-1. Update `LD_LIBRARY_PATH` to include plugins directory (this is due to Unity Editor limitation in linking certain libraries):
+3. Update `LD_LIBRARY_PATH` to include plugins directory (this is due to Unity Editor limitation in linking certain libraries):
 ```bash
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<LGSVL_PROJECT_PATH>/Assets/Plugins/x86_64
 ```
