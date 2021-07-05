@@ -81,6 +81,22 @@ namespace Simulator.Bridge
                     (callback as Action<lgsvl_msgs.msg.VehicleStateData>)
                 );
                 Subscribers.Add(topic, subscriber);
+            } else if (type == typeof(lgsvl_msgs.msg.Detection3DArray))
+            {
+                var subscriber = ros2UnityNode.node.CreateSubscription<lgsvl_msgs.msg.Detection3DArray>
+                (
+                    topic,
+                    (callback as Action<lgsvl_msgs.msg.Detection3DArray>)
+                );
+                Subscribers.Add(topic, subscriber);
+            } else if (type == typeof(lgsvl_msgs.msg.Detection2DArray))
+            {
+                var subscriber = ros2UnityNode.node.CreateSubscription<lgsvl_msgs.msg.Detection2DArray>
+                (
+                    topic,
+                    (callback as Action<lgsvl_msgs.msg.Detection2DArray>)
+                );
+                Subscribers.Add(topic, subscriber);
             }
         }
 
@@ -120,6 +136,14 @@ namespace Simulator.Bridge
             } else if (type == typeof(lgsvl_msgs.msg.VehicleOdometry))
             {
                 var publisher = ros2UnityNode.node.CreatePublisher<lgsvl_msgs.msg.VehicleOdometry>(topic);
+                Publishers.Add(topic, publisher);
+            } else if (type == typeof(lgsvl_msgs.msg.Detection3DArray))
+            {
+                var publisher = ros2UnityNode.node.CreatePublisher<lgsvl_msgs.msg.Detection3DArray>(topic);
+                Publishers.Add(topic, publisher);
+            } else if (type == typeof(lgsvl_msgs.msg.Detection2DArray))
+            {
+                var publisher = ros2UnityNode.node.CreatePublisher<lgsvl_msgs.msg.Detection2DArray>(topic);
                 Publishers.Add(topic, publisher);
             }
             return;

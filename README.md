@@ -1,6 +1,6 @@
 # Ros2NativeBridge
 
-Custom ROS2 bridge plugin for LGSVL simulator (required version 2020.06+) with native C# implementation.
+Custom ROS2 bridge plugin for LGSVL simulator version 2020.06 with native C# implementation.
 
 Please note that this bridge plugin is to be used with Autoware.auto.
 
@@ -19,6 +19,8 @@ cd Assets/External/Bridges/Ros2NativeBridge
 ```
 
 Use `Ros2NativeBridgeInstance` and `Ros2NativeBridgeFactory` classes to implement or change interface and `Ros2NativeConversions` to add or modify existing conversions between LGSVL sensors and ROS2 messages.
+
+### Building plugin
 
 Building a simulator release with `Ros2NativeBridge` plugin:
 
@@ -41,7 +43,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<LGSVL_PROJECT_PATH>/Assets/Plugins/x86_
 5. `Simulator -> Build` and check `Ros2NativeBridge` under `Bridges`.
 6. Set output path for `Build Simulator` and click `Build`.
 
-Bundling `Ros2NativeBridge` plugin:
+### Bundling `Ros2NativeBridge` plugin:
 
 1. Plugin `bridge_Ros2NativeBridge` is located inside your project build `AssetBundles/Bridges/` directory.
 2. You have to bundle bridge with required binaries:

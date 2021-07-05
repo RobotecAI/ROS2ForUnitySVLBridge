@@ -35,10 +35,36 @@ namespace Simulator.Bridge
             return new geometry_msgs.msg.Quaternion() { X = q.x, Y = q.y, Z = q.z, W = q.w };
         }
 
+        static geometry_msgs.msg.Point ConvertToPoint(UnityEngine.Vector3 v)
+        {
+            return new geometry_msgs.msg.Point() { X = v.x, Y = v.y, Z = v.z };
+        }
+
+        static geometry_msgs.msg.Vector3 ConvertToVector(UnityEngine.Vector3 v)
+        {
+            return new geometry_msgs.msg.Vector3() { X = v.x, Y = v.y, Z = v.z };
+        }
+
         static geometry_msgs.msg.Vector3 Convert(UnityEngine.Vector3 v)
         {
             return new geometry_msgs.msg.Vector3() { X = v.x, Y = v.y, Z = v.z };
         }
+
+        static UnityEngine.Vector3 Convert(geometry_msgs.msg.Point p)
+        {
+            return new UnityEngine.Vector3((float)p.X, (float)p.Y, (float)p.Z);
+        }
+
+        static UnityEngine.Quaternion Convert(geometry_msgs.msg.Quaternion q)
+        {
+            return new UnityEngine.Quaternion((float)q.X, (float)q.Y, (float)q.Z, (float)q.W);
+        }
+
+        static UnityEngine.Vector3 Convert(geometry_msgs.msg.Vector3 v)
+        {
+            return new UnityEngine.Vector3((float)v.X, (float)v.Y, (float)v.Z);
+        }
+
 
         public static VehicleControlData ConvertTo(lgsvl_msgs.msg.VehicleControlData data)
         {
@@ -94,6 +120,43 @@ namespace Simulator.Bridge
                 HandBrake = data.Hand_brake_active,
                 Horn = data.Horn_active,
                 Autonomous = data.Autonomous_mode_active,
+            };
+        }
+
+        public static Detected2DObjectArray ConvertTo(lgsvl_msgs.msg.Detection2DArray data)
+        {
+            return new Detected2DObjectArray()
+            {
+                Data = data.Detections.Select(obj =>
+                    new Detected2DObject()
+                    {
+                        Id = obj.Id,
+                        Label = obj.Label,
+                        Score = obj.Score,
+                        Position = new UnityEngine.Vector2(obj.Bbox.X, obj.Bbox.Y),
+                        Scale = new UnityEngine.Vector2(obj.Bbox.Width, obj.Bbox.Height),
+                        LinearVelocity = new UnityEngine.Vector3((float)obj.Velocity.Linear.X, 0, 0),
+                        AngularVelocity = new UnityEngine.Vector3(0, 0, (float)obj.Velocity.Angular.Z),
+                    }).ToArray(),
+            };
+        }
+
+        public static Detected3DObjectArray ConvertTo(lgsvl_msgs.msg.Detection3DArray data)
+        {
+            return new Detected3DObjectArray()
+            {
+                Data = data.Detections.Select(obj =>
+                    new Detected3DObject()
+                    {
+                        Id = obj.Id,
+                        Label = obj.Label,
+                        Score = obj.Score,
+                        Position = Convert(obj.Bbox.Position.Position),
+                        Rotation = Convert(obj.Bbox.Position.Orientation),
+                        Scale = Convert(obj.Bbox.Size),
+                        LinearVelocity = Convert(obj.Velocity.Linear),
+                        AngularVelocity = Convert(obj.Velocity.Angular),
+                    }).ToArray(),
             };
         }
 
@@ -310,6 +373,102 @@ namespace Simulator.Bridge
             };
 
             return odom;
+        }
+
+        public static lgsvl_msgs.msg.Detection2DArray ConvertFrom(Detected2DObjectData data)
+        {
+            var time = ConvertTime(data.Time);
+            var arr = new lgsvl_msgs.msg.Detection2DArray()
+            {
+                Header = new std_msgs.msg.Header()
+                {
+                    Stamp = time,
+                    Frame_id = data.Frame,
+                },
+                Detections = new lgsvl_msgs.msg.Detection2D[data.Data.Length],
+            };
+            
+            int index = 0;
+            foreach (var d in data.Data) {
+                var detection = new lgsvl_msgs.msg.Detection2D()
+                {
+                    Id = d.Id,
+                    Label = d.Label,
+                    Score = (float)d.Score,
+                    Bbox = new lgsvl_msgs.msg.BoundingBox2D()
+                    {
+                        X = d.Position.x,
+                        Y = d.Position.y,
+                        Width = d.Scale.x,
+                        Height = d.Scale.y
+                    },
+                    Velocity = new geometry_msgs.msg.Twist()
+                    {
+                        Linear = ConvertToVector(d.LinearVelocity),
+                        Angular = ConvertToVector(d.AngularVelocity),
+                    }
+                };
+                arr.Detections[index] = detection;
+                index += 1;
+            }
+
+            return arr;
+        }
+
+        public static lgsvl_msgs.msg.Detection3DArray ConvertFrom(Detected3DObjectData data)
+        {
+            var time = ConvertTime(data.Time);
+            var arr = new lgsvl_msgs.msg.Detection3DArray()
+            {
+                Header = new std_msgs.msg.Header()
+                {
+                    Stamp = time,
+                    Frame_id = data.Frame,
+                },
+                Detections = new lgsvl_msgs.msg.Detection3D[data.Data.Length],
+            };
+            
+            int index = 0;
+            foreach (var d in data.Data)
+            {
+                // Transform from (Right/Up/Forward) to (Forward/Left/Up)
+                var position = d.Position;
+                position.Set(position.z, -position.x, position.y);
+
+                var orientation = d.Rotation;
+                orientation.Set(-orientation.z, orientation.x, -orientation.y, orientation.w);
+
+                var size = d.Scale;
+                size.Set(size.z, size.x, size.y);
+
+                d.AngularVelocity.z = -d.AngularVelocity.z;
+
+                var det = new lgsvl_msgs.msg.Detection3D()
+                {
+                    Id = d.Id,
+                    Label = d.Label,
+                    Score = (float)d.Score,
+                    Bbox = new lgsvl_msgs.msg.BoundingBox3D()
+                    {
+                        Position = new geometry_msgs.msg.Pose()
+                        {
+                            Position = ConvertToPoint(position),
+                            Orientation = Convert(orientation),
+                        },
+                        Size = ConvertToVector(size),
+                    },
+                    Velocity = new geometry_msgs.msg.Twist()
+                    {
+                        Linear = ConvertToVector(d.LinearVelocity),
+                        Angular = ConvertToVector(d.AngularVelocity),
+                    },
+                };
+
+                arr.Detections[index] = det;
+                index += 1;
+            }
+
+            return arr;
         }
     }
 }
