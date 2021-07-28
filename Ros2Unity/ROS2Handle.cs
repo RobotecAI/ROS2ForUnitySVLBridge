@@ -5,14 +5,16 @@
 
 using UnityEngine;
 using System.Threading;
+using ROS2;
 
-namespace Ros2Native
+namespace ROS2
 {
     /// <summary>
     /// The principal class for handling ROS2 node and spinning thread.
     /// </summary>
-    public class ROS2Unity
+    public class ROS2Handle
     {
+        private ROS2ForUnity ros2forUnity;
         public ROS2Node node;
         private bool initialized = false;
         private bool spinning = false;
@@ -21,19 +23,17 @@ namespace Ros2Native
         Thread publishThread;
         public bool Ok()
         {
-            return (node != null && node.Ok());
+            return (node != null && ros2forUnity.Ok());
         }
 
-        public ROS2Unity()
+        public ROS2Handle()
         {
+            ros2forUnity = new ROS2ForUnity();
             node = new ROS2Node();
         }
 
         public void Destroy() {
-            if(node != null)
-            {
-                node.DestroyNode();
-            }
+            ros2forUnity.DestroyROS2ForUnity();
         }
 
         void Tick()
@@ -44,9 +44,9 @@ namespace Ros2Native
             while (spinning)
             {
 
-                if (node.Ok())
+                if (ros2forUnity.Ok())
                 {
-                    node.SpinOnce();
+                    Ros2cs.SpinOnce(node.node, 0.01);
                 }
             }
         }

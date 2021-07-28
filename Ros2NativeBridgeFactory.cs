@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Simulator.Bridge
 {
-    [BridgeName("Ros2NativeBridge")]
+    [BridgeName("Ros2NativeBridgeTest", "ROS2")]
     public class Ros2NativeBridgeFactory : IBridgeFactory
     {
         public IBridgeInstance CreateInstance() => new Ros2NativeBridgeInstance();
