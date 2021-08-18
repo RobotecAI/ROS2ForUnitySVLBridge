@@ -139,6 +139,10 @@ namespace Simulator.Bridge
             {
                 var publisher = Ros2Handler.node.CreatePublisher<lgsvl_msgs.msg.Detection2DArray>(topic);
                 Publishers.Add(topic, publisher);
+            } else if (type == typeof(sensor_msgs.msg.CameraInfo))
+            {
+                var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.CameraInfo>(topic);
+                Publishers.Add(topic, publisher);
             }
             return;
         }
