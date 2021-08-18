@@ -14,7 +14,7 @@ using ROS2;
 
 namespace Simulator.Bridge
 {
-    public partial class Ros2NativeBridgeInstance : IBridgeInstance
+    public partial class Ros2NativeInstance : IBridgeInstance
     {
         public Status Status { get; private set; } = Status.Disconnected;
 
@@ -23,7 +23,7 @@ namespace Simulator.Bridge
 
         private ROS2Handle Ros2Handler;
 
-        public Ros2NativeBridgeInstance()
+        public Ros2NativeInstance()
         {
             Ros2Handler = new ROS2Handle();
         }

@@ -10,10 +10,10 @@ namespace Simulator.Bridge
 {
     public class Ros2NativeWriter<BridgeType>
     {
-        Ros2NativeBridgeInstance Instance;
+        Ros2NativeInstance Instance;
         string Topic;
 
-        public Ros2NativeWriter(Ros2NativeBridgeInstance instance, string topic)
+        public Ros2NativeWriter(Ros2NativeInstance instance, string topic)
         {
             Instance = instance;
             Topic = topic;
@@ -32,7 +32,7 @@ namespace Simulator.Bridge
 
         byte[] Buffer;
 
-        public Ros2NativePointCloudWriter(Ros2NativeBridgeInstance instance, string topic)
+        public Ros2NativePointCloudWriter(Ros2NativeInstance instance, string topic)
         {
             Writer = new Ros2NativeWriter<sensor_msgs.msg.PointCloud2>(instance, topic);
         }

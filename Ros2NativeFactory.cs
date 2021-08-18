@@ -11,10 +11,10 @@ using UnityEngine;
 
 namespace Simulator.Bridge
 {
-    [BridgeName("Ros2NativeBridgeTest", "ROS2")]
-    public class Ros2NativeBridgeFactory : IBridgeFactory
+    [BridgeName("Ros2Native", "ROS2")]
+    public class Ros2NativeFactory : IBridgeFactory
     {
-        public IBridgeInstance CreateInstance() => new Ros2NativeBridgeInstance();
+        public IBridgeInstance CreateInstance() => new Ros2NativeInstance();
 
         public void Register(IBridgePlugin plugin)
         {
@@ -25,7 +25,7 @@ namespace Simulator.Bridge
             plugin.AddPublisherCreator(
                 (instance, topic) =>
                 {
-                    var ros2Instance = instance as Ros2NativeBridgeInstance;
+                    var ros2Instance = instance as Ros2NativeInstance;
                     ros2Instance.AddPublisher<sensor_msgs.msg.PointCloud2>(topic);
                     var writer = new Ros2NativePointCloudWriter(ros2Instance, topic);
                     return new Publisher<PointCloudData>((data, completed) => writer.Write(data, completed));
@@ -33,6 +33,7 @@ namespace Simulator.Bridge
             );
 
             RegPublisher<ImageData, sensor_msgs.msg.CompressedImage>(plugin, Ros2NativeConversions.ConvertFrom);
+            RegPublisher<CameraInfoData, sensor_msgs.msg.CameraInfo>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<Detected3DObjectData, lgsvl_msgs.msg.Detection3DArray>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<Detected2DObjectData, lgsvl_msgs.msg.Detection2DArray>(plugin, Ros2NativeConversions.ConvertFrom);
             RegPublisher<CanBusData, lgsvl_msgs.msg.CanBusData>(plugin, Ros2NativeConversions.ConvertFrom);
@@ -54,7 +55,7 @@ namespace Simulator.Bridge
             plugin.AddPublisherCreator(
                 (instance, topic) =>
                 {
-                    var ros2Instance = instance as Ros2NativeBridgeInstance;
+                    var ros2Instance = instance as Ros2NativeInstance;
                     ros2Instance.AddPublisher<BridgeType>(topic);
                     var writer = new Ros2NativeWriter<BridgeType>(ros2Instance, topic);
                     return new Publisher<DataType>((data, completed) => writer.Write(converter(data), completed));
@@ -66,7 +67,7 @@ namespace Simulator.Bridge
         {
             plugin.AddType<DataType>(typeof(DataType).Name);
             plugin.AddSubscriberCreator<DataType>(
-                (instance, topic, callback) => (instance as Ros2NativeBridgeInstance).AddSubscriber<BridgeType>(topic,
+                (instance, topic, callback) => (instance as Ros2NativeInstance).AddSubscriber<BridgeType>(topic,
                     (data) => callback(converter(data))
                 )
             );

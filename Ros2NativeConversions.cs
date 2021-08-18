@@ -160,6 +160,57 @@ namespace Simulator.Bridge
             };
         }
 
+        public static sensor_msgs.msg.CameraInfo ConvertFrom(CameraInfoData data)
+        {
+            var time = ConvertTime(data.Time);
+            var msg = new sensor_msgs.msg.CameraInfo() 
+            {
+                Header = new std_msgs.msg.Header()
+                {
+                    Stamp = time,
+                    Frame_id = data.Frame,
+                },
+                Height = (uint)data.Height,
+                Width = (uint)data.Width,
+                Distortion_model = "plumb_bob",
+                D = new double[5]
+                {
+                    (double)data.DistortionParameters[0],
+                    (double)data.DistortionParameters[1],
+                    0.0,
+                    0.0,
+                    (double)data.DistortionParameters[2],
+                },
+                Binning_x = 0,
+                Binning_y = 0,
+                Roi = new sensor_msgs.msg.RegionOfInterest()
+                {
+                    X_offset = 0,
+                    Y_offset = 0,
+                    Width = 0,
+                    Height = 0,
+                    Do_rectify = false,
+                },
+            };
+            
+            msg.K[0] = data.FocalLengthX;
+            msg.K[2] = data.PrincipalPointX;
+            msg.K[4] = data.FocalLengthY;
+            msg.K[5] = data.PrincipalPointY;
+            msg.K[8] = 1.0;
+
+            msg.R[0] = 1.0;
+            msg.R[4] = 1.0;
+            msg.R[8] = 1.0;
+
+            msg.P[0] = data.FocalLengthX;
+            msg.P[2] = data.PrincipalPointX;
+            msg.P[5] = data.FocalLengthY;
+            msg.P[6] = data.PrincipalPointY;
+            msg.P[10] = 1.0;
+            return msg;
+        }
+
         public static sensor_msgs.msg.CompressedImage ConvertFrom(ImageData data)
         {
             var time = ConvertTime(data.Time);
