@@ -24,18 +24,18 @@ namespace ROS2
 /// <summary>
 /// An internal class responsible for handling checking, proper initialization and shutdown of ROS2cs,
 /// </summary>
-internal class ROS2ForUnity
+internal class ROS2Unity
 {
     private static bool isInitialized = false;
 
-    internal ROS2ForUnity()
+    internal ROS2Unity()
     {
-        Debug.Log("Initializing Ros2 For Unity");
+        Debug.Log("Initializing Ros2 For Unity.");
         Ros2cs.Init();
 
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged += this.EditorPlayStateChanged;
-        EditorApplication.quitting += this.DestroyROS2ForUnity;
+        EditorApplication.quitting += this.DestroyROS2Unity;
 #endif
         isInitialized = true;
     }
@@ -49,7 +49,7 @@ internal class ROS2ForUnity
         return Ros2cs.Ok();
     }
 
-    internal void DestroyROS2ForUnity()
+    internal void DestroyROS2Unity()
     {
         if (isInitialized)
         {
@@ -64,7 +64,7 @@ internal class ROS2ForUnity
     {
         if (change == PlayModeStateChange.ExitingPlayMode)
         {
-            DestroyROS2ForUnity();
+            DestroyROS2Unity();
         }
     }
 #endif

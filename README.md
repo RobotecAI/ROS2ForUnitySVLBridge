@@ -1,28 +1,26 @@
-# Ros2Native
+# ROS2 For Unity bridge by Robotec.ai
 
-Custom ROS2 bridge plugin for SVL simulator version 2021.2.1 with native C# implementation.
+Custom ROS2 bridge plugin for SVL simulator version 2021.2.1+ with native C# implementation.
 
-Please note that this bridge plugin is to be used with Autoware.auto.
-
-This plugin relies on binaries `plugins.zip` included in this repository.
+This plugin relies on binaries included in this repository [releases](https://github.com/RobotecAI/ROS2ForUnity/releases) page.
 
 ## Developer guide
 
-To start developing `Ros2Native` with Unity Editor:
+To start developing `ROS2ForUnity` with Unity Editor:
 
 1. Make sure you have LGSVL simulatior version 2021.2.1 (see https://www.svlsimulator.com/docs/installation-guide/build-instructions/ for more instructions about getting and launching SVL project).
-2. Copy contents of this repository into `Assets/External/Bridges/Ros2Native` folder of SVL simulator Unity project.
-3. Unzip required binaries from `plugins.zip` to `Assets/Plugins` - you can use `deploy_unity_plugins.sh` script to do that for you:
+2. Copy contents of this repository into `Assets/External/Bridges/ROS2ForUnity` folder of SVL simulator Unity project.
+3. Unzip required binaries from [releases](https://github.com/RobotecAI/ROS2ForUnity/releases) to `Assets/Plugins` - you can use `deploy_unity_plugins.sh` script to do that for you:
 ```bash
-cd Assets/External/Bridges/Ros2Native
-./deploy_unity_plugins.sh
+cd Assets/External/Bridges/ROS2ForUnity
+./deploy_unity_plugins.sh <ARCHIVE_PATH>
 ```
 
-Use `Ros2NativeInstance` and `Ros2NativeFactory` classes to implement or change interface and `Ros2NativeConversions` to add or modify existing conversions between SVL sensors and ROS2 messages.
+Use `ROS2ForUnityInstance` and `ROS2ForUnityFactory` classes to implement or change interface and `ROS2ForUnityConversions` to add or modify existing conversions between SVL sensors and ROS2 messages.
 
 ### Building plugin
 
-Building a simulator release with `Ros2Native` plugin:
+Building a simulator release with `ROS2ForUnity` plugin:
 
 1. Source ROS2 foxy:
 ```bash
@@ -40,17 +38,16 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<SVL_PROJECT_PATH>/Assets/Plugins/x86_64
 ```bash
 <UNITY_EDITOR_PATH>/Unity -projectPath <SVL_PROJECT_PATH>
 ```
-5. `Simulator -> Build` and check `Ros2Native` under `Bridges`.
+5. `Simulator -> Build` and check `ROS2ForUnity` under `Bridges`.
 6. Click `Build`.
 
-### Using `Ros2Native` plugin:
+### Using `ROS2ForUnity` plugin:
 
 SVL uses cloud-based web user interface for handling assets and simulations: https://wise.svlsimulator.com/. 
 
-`Ros2Native` bridge plugin:
-1. needs to be deployed into SVL asset store, and
-2. you have to place bundled binaries from `plugins.zip` into SVL simulator release:
-   1. libraries from `plugins.zip` `Plugins/x86_64/*` goes into `simulator_Data/Plugins` of simulator release,
-   2. libraries from `plugins.zip` `Plugins/*.dll` goes into `simulator_Data/Managed` of simulator release.
+1. Find `ROS2ForUnity` under `https://wise.svlsimulator.com/plugins` and add it to your library.
+2. install required binaries from github [releases](https://github.com/RobotecAI/ROS2ForUnity/releases) page into SVL simulator application:
+   1. libraries from release archive `Plugins/x86_64/*` goes into `simulator_Data/Plugins` of svl simulator directory,
+   2. libraries from release archive `Plugins/*.dll` goes into `simulator_Data/Managed` of svl simulator directory.
 
 Then you can just use SVL web interface to set up bridge. See https://www.svlsimulator.com/docs for more informations on how to set up an SVL simulation.

@@ -1,19 +1,28 @@
-/**
- * Copyright 2019-2020, Robotec.ai sp z o.o.
- * Authors: piotr.jaroszek@robotec.ai, adam.dabrowski@robotec.ai
- */
+// Copyright 2019-2021 Robotec.ai.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 using System;
 using System.Text;
 
 namespace Simulator.Bridge
 {
-    public class Ros2NativeWriter<BridgeType>
+    public class ROS2ForUnityWriter<BridgeType>
     {
-        Ros2NativeInstance Instance;
+        ROS2ForUnityInstance Instance;
         string Topic;
 
-        public Ros2NativeWriter(Ros2NativeInstance instance, string topic)
+        public ROS2ForUnityWriter(ROS2ForUnityInstance instance, string topic)
         {
             Instance = instance;
             Topic = topic;
@@ -26,15 +35,15 @@ namespace Simulator.Bridge
         }
     }
 
-    public class Ros2NativePointCloudWriter
+    public class ROS2ForUnityPointCloudWriter
     {
-        Ros2NativeWriter<sensor_msgs.msg.PointCloud2> Writer;
+        ROS2ForUnityWriter<sensor_msgs.msg.PointCloud2> Writer;
 
         byte[] Buffer;
 
-        public Ros2NativePointCloudWriter(Ros2NativeInstance instance, string topic)
+        public ROS2ForUnityPointCloudWriter(ROS2ForUnityInstance instance, string topic)
         {
-            Writer = new Ros2NativeWriter<sensor_msgs.msg.PointCloud2>(instance, topic);
+            Writer = new ROS2ForUnityWriter<sensor_msgs.msg.PointCloud2>(instance, topic);
         }
 
         public void Write(Data.PointCloudData data, Action completed)
@@ -70,7 +79,7 @@ namespace Simulator.Bridge
                 }
             }
 
-            var time = Ros2NativeConversions.ConvertTime(data.Time);
+            var time = ROS2ForUnityConversions.ConvertTime(data.Time);
             var msg = new sensor_msgs.msg.PointCloud2()
             {
                 Header = new std_msgs.msg.Header()

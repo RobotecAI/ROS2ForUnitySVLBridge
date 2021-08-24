@@ -41,6 +41,14 @@ public class ROS2Node
         }
     }
 
+    private static void ThrowIfEmptyTopic(string topic)
+    {
+        if (topic == "")
+        {
+            throw new InvalidOperationException("Empty topics are not supported.");
+        }
+    }
+
     /// <summary>
     /// Create a publisher with QoS suitable for sensor data
     /// </summary>
@@ -48,6 +56,8 @@ public class ROS2Node
     /// <param name="topicName">topic that will be used for publishing</param>
     public Publisher<T> CreateSensorPublisher<T>(string topicName) where T : Message, new()
     {
+        ThrowIfUninitialized("create publisher");
+        ThrowIfEmptyTopic(topicName);
         QualityOfServiceProfile sensorProfile = new QualityOfServiceProfile(QosPresetProfile.SENSOR_DATA);
         return CreatePublisher<T>(topicName, sensorProfile);
     }
@@ -61,6 +71,7 @@ public class ROS2Node
     public Publisher<T> CreatePublisher<T>(string topicName, QualityOfServiceProfile qos = null) where T : Message, new()
     {
         ThrowIfUninitialized("create publisher");
+        ThrowIfEmptyTopic(topicName);
         return node.CreatePublisher<T>(topicName, qos);
     }
 
@@ -78,6 +89,7 @@ public class ROS2Node
             qos = new QualityOfServiceProfile(QosPresetProfile.DEFAULT);
         }
         ThrowIfUninitialized("create subscription");
+        ThrowIfEmptyTopic(topicName);
         return node.CreateSubscription<T>(topicName, callback, qos);
     }
 

@@ -5,4 +5,4 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 
 ASSETS_DIR=$SCRIPTPATH/../../../
 
-unzip $SCRIPTPATH/plugins.zip 'Plugins/*' -d $ASSETS_DIR/
+unzip "$1" 'Plugins/*' -d $ASSETS_DIR/
