@@ -30,9 +30,9 @@ Building a simulator release with `ROS2ForUnity` plugin:
 ```bash
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
 ```
-3. Update `LD_LIBRARY_PATH` to include plugins directory (this is due to Unity Editor limitation in linking certain libraries):
+3. Update `LD_LIBRARY_PATH` to include plugins directory (this is due to Unity Editor limitation in linking certain libraries), please note OS subfolder `Linux/Windows`:
 ```bash
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<SVL_PROJECT_PATH>/Assets/Plugins/x86_64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:<SVL_PROJECT_PATH>/Assets/Plugins/<Linux/Windows>/x86_64
 ```
 4. Launch Unity Editor directly:
 ```bash
@@ -51,3 +51,5 @@ SVL uses cloud-based web user interface for handling assets and simulations: htt
    2. libraries from release archive `Plugins/*.dll` goes into `simulator_Data/Managed` of svl simulator directory.
 
 Then you can just use SVL web interface to set up bridge. See https://www.svlsimulator.com/docs for more informations on how to set up an SVL simulation.
+
+**IMPORTANT** After making an app build from editor, you must manually copy soversion files (ending with library version `.so.X.Y.Z`) from editor `Plugins/<OS>/x86_64` to `simulator_Data/Plugins` folder. This is due to Unity for some reason doesn't copy them while deploying application.
