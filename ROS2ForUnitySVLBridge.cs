@@ -23,16 +23,46 @@ using ROS2;
 
 namespace Simulator.Bridge
 {
-    public partial class ROS2ForUnityInstance : IBridgeInstance
+    using ImuDict = Dictionary<string, ROS2.Publisher<sensor_msgs.msg.Imu>>;
+    using OdometryDict = Dictionary<string, ROS2.Publisher<nav_msgs.msg.Odometry>>;
+    using PointCloud2Dict = Dictionary<string, ROS2.Publisher<sensor_msgs.msg.PointCloud2>>;
+    using CompressedImageDict = Dictionary<string, ROS2.Publisher<sensor_msgs.msg.CompressedImage>>;
+    using CanBusDataDict = Dictionary<string, ROS2.Publisher<lgsvl_msgs.msg.CanBusData>>;
+    using NavSatFixDict = Dictionary<string, ROS2.Publisher<sensor_msgs.msg.NavSatFix>>;
+    using ClockDict = Dictionary<string, ROS2.Publisher<rosgraph_msgs.msg.Clock>>;
+    using VehicleOdometryDict = Dictionary<string, ROS2.Publisher<lgsvl_msgs.msg.VehicleOdometry>>;
+    using Detection3DArrayDict = Dictionary<string, ROS2.Publisher<lgsvl_msgs.msg.Detection3DArray>>;
+    using Detection2DArrayDict = Dictionary<string, ROS2.Publisher<lgsvl_msgs.msg.Detection2DArray>>;
+    using CameraInfoDict = Dictionary<string, ROS2.Publisher<sensor_msgs.msg.CameraInfo>>;
+
+    public class ROS2Publishers {
+
+        public ImuDict ImuPublishers = new ImuDict();
+        public OdometryDict OdometryPublishers = new OdometryDict();
+        public PointCloud2Dict PointCloud2Publishers = new PointCloud2Dict();
+        public CompressedImageDict CompressedImagePublishers = new CompressedImageDict();
+        public CanBusDataDict CanBusDataPublishers = new CanBusDataDict();
+        public NavSatFixDict NavSatFixPublishers = new NavSatFixDict();
+        public ClockDict ClockPublishers = new ClockDict();
+        public VehicleOdometryDict VehicleOdometryPublishers = new VehicleOdometryDict();
+        public Detection3DArrayDict Detection3DArrayPublishers = new Detection3DArrayDict();
+        public Detection2DArrayDict Detection2DArrayPublishers = new Detection2DArrayDict();
+        public CameraInfoDict CameraInfoPublishers = new CameraInfoDict();
+    }
+
+    public partial class ROS2ForUnitySVLBridgeInstance : IBridgeInstance
     {
+
         public Status Status { get; private set; } = Status.Disconnected;
 
-        Dictionary<string, dynamic> Publishers = new Dictionary<string, dynamic>();
-        Dictionary<string, dynamic> Subscribers = new Dictionary<string, dynamic>();
+        
+        ROS2Publishers Publishers = new ROS2Publishers();
+        // Dictionary<string, ROS2.Publisher<sensor_msgs.msg.Imu>> PublishersImu = new Dictionary<string, ROS2.Publisher<sensor_msgs.msg.Imu>>();
+        // Dictionary<string, dynamic> Subscribers = new Dictionary<string, dynamic>();
 
         private ROS2Handle Ros2Handler;
 
-        public ROS2ForUnityInstance()
+        public ROS2ForUnitySVLBridgeInstance()
         {
             Ros2Handler = new ROS2Handle();
         }
@@ -65,6 +95,7 @@ namespace Simulator.Bridge
 
         public void AddSubscriber<BridgeType>(string topic, Action<BridgeType> callback)
         {
+            return;
             WaitForRos2();
             var type = typeof(BridgeType);
             try
@@ -76,7 +107,7 @@ namespace Simulator.Bridge
                         topic,
                         (callback as Action<lgsvl_msgs.msg.VehicleControlData>)
                     );
-                    Subscribers.Add(topic, subscriber);
+                    // Subscribers.Add(topic, subscriber);
                 } else if (type == typeof(lgsvl_msgs.msg.VehicleStateData))
                 {
                     var subscriber = Ros2Handler.node.CreateSubscription<lgsvl_msgs.msg.VehicleStateData>
@@ -84,7 +115,7 @@ namespace Simulator.Bridge
                         topic,
                         (callback as Action<lgsvl_msgs.msg.VehicleStateData>)
                     );
-                    Subscribers.Add(topic, subscriber);
+                    // Subscribers.Add(topic, subscriber);
                 } else if (type == typeof(lgsvl_msgs.msg.Detection3DArray))
                 {
                     var subscriber = Ros2Handler.node.CreateSubscription<lgsvl_msgs.msg.Detection3DArray>
@@ -92,7 +123,7 @@ namespace Simulator.Bridge
                         topic,
                         (callback as Action<lgsvl_msgs.msg.Detection3DArray>)
                     );
-                    Subscribers.Add(topic, subscriber);
+                    // Subscribers.Add(topic, subscriber);
                 } else if (type == typeof(lgsvl_msgs.msg.Detection2DArray))
                 {
                     var subscriber = Ros2Handler.node.CreateSubscription<lgsvl_msgs.msg.Detection2DArray>
@@ -100,7 +131,7 @@ namespace Simulator.Bridge
                         topic,
                         (callback as Action<lgsvl_msgs.msg.Detection2DArray>)
                     );
-                    Subscribers.Add(topic, subscriber);
+                    // Subscribers.Add(topic, subscriber);
                 }
             } catch (InvalidOperationException e)
             {
@@ -117,47 +148,47 @@ namespace Simulator.Bridge
                 if (type == typeof(sensor_msgs.msg.Imu))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.Imu>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.ImuPublishers.Add(topic, publisher);
                 } else if (type == typeof(nav_msgs.msg.Odometry))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<nav_msgs.msg.Odometry>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.OdometryPublishers.Add(topic, publisher);
                 } else if (type == typeof(sensor_msgs.msg.PointCloud2))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.PointCloud2>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.PointCloud2Publishers.Add(topic, publisher);
                 } else if (type == typeof(sensor_msgs.msg.CompressedImage))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.CompressedImage>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.CompressedImagePublishers.Add(topic, publisher);
                 } else if (type == typeof(lgsvl_msgs.msg.CanBusData))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<lgsvl_msgs.msg.CanBusData>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.CanBusDataPublishers.Add(topic, publisher);
                 } else if (type == typeof(sensor_msgs.msg.NavSatFix))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.NavSatFix>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.NavSatFixPublishers.Add(topic, publisher);
                 } else if (type == typeof(rosgraph_msgs.msg.Clock))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<rosgraph_msgs.msg.Clock>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.ClockPublishers.Add(topic, publisher);
                 } else if (type == typeof(lgsvl_msgs.msg.VehicleOdometry))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<lgsvl_msgs.msg.VehicleOdometry>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.VehicleOdometryPublishers.Add(topic, publisher);
                 } else if (type == typeof(lgsvl_msgs.msg.Detection3DArray))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<lgsvl_msgs.msg.Detection3DArray>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.Detection3DArrayPublishers.Add(topic, publisher);
                 } else if (type == typeof(lgsvl_msgs.msg.Detection2DArray))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<lgsvl_msgs.msg.Detection2DArray>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.Detection2DArrayPublishers.Add(topic, publisher);
                 } else if (type == typeof(sensor_msgs.msg.CameraInfo))
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.CameraInfo>(topic);
-                    Publishers.Add(topic, publisher);
+                    Publishers.CameraInfoPublishers.Add(topic, publisher);
                 }
                 return;
             } catch (InvalidOperationException e)
@@ -169,7 +200,17 @@ namespace Simulator.Bridge
         public void Publish<BridgeType>(string topic, BridgeType msg)
         {
             if (Ros2Handler.Ok()) {
-                Publishers[topic].Publish(msg);
+                if(typeof(BridgeType) == typeof(sensor_msgs.msg.Imu)) {Publishers.ImuPublishers[topic].Publish(msg as sensor_msgs.msg.Imu);}
+                else if(typeof(BridgeType) == typeof(nav_msgs.msg.Odometry)) {Publishers.OdometryPublishers[topic].Publish(msg as nav_msgs.msg.Odometry);}
+                else if(typeof(BridgeType) == typeof(sensor_msgs.msg.PointCloud2)) {Publishers.PointCloud2Publishers[topic].Publish(msg as sensor_msgs.msg.PointCloud2);}
+                else if(typeof(BridgeType) == typeof(sensor_msgs.msg.CompressedImage)) {Publishers.CompressedImagePublishers[topic].Publish(msg as sensor_msgs.msg.CompressedImage);}
+                else if(typeof(BridgeType) == typeof(lgsvl_msgs.msg.CanBusData)) {Publishers.CanBusDataPublishers[topic].Publish(msg as lgsvl_msgs.msg.CanBusData);}
+                else if(typeof(BridgeType) == typeof(sensor_msgs.msg.NavSatFix)) {Publishers.NavSatFixPublishers[topic].Publish(msg as sensor_msgs.msg.NavSatFix);}
+                else if(typeof(BridgeType) == typeof(rosgraph_msgs.msg.Clock)) {Publishers.ClockPublishers[topic].Publish(msg as rosgraph_msgs.msg.Clock);}
+                else if(typeof(BridgeType) == typeof(lgsvl_msgs.msg.VehicleOdometry)) {Publishers.VehicleOdometryPublishers[topic].Publish(msg as lgsvl_msgs.msg.VehicleOdometry);}
+                else if(typeof(BridgeType) == typeof(lgsvl_msgs.msg.Detection3DArray)) {Publishers.Detection3DArrayPublishers[topic].Publish(msg as lgsvl_msgs.msg.Detection3DArray);}
+                else if(typeof(BridgeType) == typeof(lgsvl_msgs.msg.Detection2DArray)) {Publishers.Detection2DArrayPublishers[topic].Publish(msg as lgsvl_msgs.msg.Detection2DArray);}
+                else if(typeof(BridgeType) == typeof(sensor_msgs.msg.CameraInfo)) {Publishers.CameraInfoPublishers[topic].Publish(msg as sensor_msgs.msg.CameraInfo);}
             }
         }
     }

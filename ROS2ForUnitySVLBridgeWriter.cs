@@ -14,15 +14,16 @@
 
 using System;
 using System.Text;
+using UnityEngine;
 
 namespace Simulator.Bridge
 {
-    public class ROS2ForUnityWriter<BridgeType>
+    public class ROS2ForUnitySVLBridgeWriter<BridgeType>
     {
-        ROS2ForUnityInstance Instance;
+        ROS2ForUnitySVLBridgeInstance Instance;
         string Topic;
 
-        public ROS2ForUnityWriter(ROS2ForUnityInstance instance, string topic)
+        public ROS2ForUnitySVLBridgeWriter(ROS2ForUnitySVLBridgeInstance instance, string topic)
         {
             Instance = instance;
             Topic = topic;
@@ -35,15 +36,15 @@ namespace Simulator.Bridge
         }
     }
 
-    public class ROS2ForUnityPointCloudWriter
+    public class ROS2ForUnitySVLBridgePointCloudWriter
     {
-        ROS2ForUnityWriter<sensor_msgs.msg.PointCloud2> Writer;
+        ROS2ForUnitySVLBridgeWriter<sensor_msgs.msg.PointCloud2> Writer;
 
         byte[] Buffer;
 
-        public ROS2ForUnityPointCloudWriter(ROS2ForUnityInstance instance, string topic)
+        public ROS2ForUnitySVLBridgePointCloudWriter(ROS2ForUnitySVLBridgeInstance instance, string topic)
         {
-            Writer = new ROS2ForUnityWriter<sensor_msgs.msg.PointCloud2>(instance, topic);
+            Writer = new ROS2ForUnitySVLBridgeWriter<sensor_msgs.msg.PointCloud2>(instance, topic);
         }
 
         public void Write(Data.PointCloudData data, Action completed)
@@ -79,7 +80,7 @@ namespace Simulator.Bridge
                 }
             }
 
-            var time = ROS2ForUnityConversions.ConvertTime(data.Time);
+            var time = ROS2ForUnitySVLBridgeConversions.ConvertTime(data.Time);
             var msg = new sensor_msgs.msg.PointCloud2()
             {
                 Header = new std_msgs.msg.Header()

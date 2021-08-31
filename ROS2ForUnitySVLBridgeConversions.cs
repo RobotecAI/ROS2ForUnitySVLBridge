@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace Simulator.Bridge
 {
-    static class ROS2ForUnityConversions
+    static class ROS2ForUnitySVLBridgeConversions
     {
         public static builtin_interfaces.msg.Time ConvertTime(double unixEpochSeconds)
         {
