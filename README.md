@@ -52,4 +52,4 @@ SVL uses cloud-based web user interface for handling assets and simulations: htt
 
 Then you can just use SVL web interface to set up bridge. See https://www.svlsimulator.com/docs for more informations on how to set up an SVL simulation.
 
-**IMPORTANT** After making an app build from editor, you must manually copy soversion files (ending with library version `.so.X.Y.Z`) from editor `Plugins/<OS>/x86_64` to `simulator_Data/Plugins` folder. This is due to Unity for some reason doesn't copy them while deploying application.
+**IMPORTANT** After building an app from editor, you must manually copy soversion files (ending with library version `.so.X.Y.Z`) from editor `Plugins/<OS>/x86_64` to `simulator_Data/Plugins` folder. This is due to Unity for some reason doesn't copy them while deploying application.
