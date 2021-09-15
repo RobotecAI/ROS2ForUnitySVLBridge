@@ -1,6 +1,6 @@
 # ROS2 For Unity bridge by Robotec.ai
 
-Custom ROS2 bridge plugin for SVL simulator version 2021.2.1+ with native C# implementation.
+Custom ROS2 bridge plugin for SVL simulator version 2021.3+ with native C# implementation.
 
 This plugin relies on binaries included in this repository [releases](https://github.com/RobotecAI/ROS2ForUnitySVLBridge/releases) page.
 
@@ -8,7 +8,7 @@ This plugin relies on binaries included in this repository [releases](https://gi
 
 To start developing `ROS2ForUnitySVLBridge` with Unity Editor:
 
-1. Make sure you have LGSVL simulatior version 2021.2.1 (see https://www.svlsimulator.com/docs/installation-guide/build-instructions/ for more instructions about getting and launching SVL project).
+1. Make sure you have LGSVL simulatior version 2021.3 (see https://www.svlsimulator.com/docs/installation-guide/build-instructions/ for more instructions about getting and launching SVL project).
 2. Copy contents of this repository into `Assets/External/Bridges/ROS2ForUnitySVLBridge` folder of SVL simulator Unity project.
 3. Unzip required binaries from [releases](https://github.com/RobotecAI/ROS2ForUnitySVLBridge/releases) to `Assets/Plugins` - you can use `deploy_unity_plugins.sh` script to do that for you:
 ```bash
