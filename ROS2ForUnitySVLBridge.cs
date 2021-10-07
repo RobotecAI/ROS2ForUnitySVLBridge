@@ -56,7 +56,7 @@ namespace Simulator.Bridge
         public Status Status { get; private set; } = Status.Disconnected;
 
         
-        ROS2Publishers Publishers = new ROS2Publishers();
+        ROS2Publishers Publishers;
         // Dictionary<string, ROS2.Publisher<sensor_msgs.msg.Imu>> PublishersImu = new Dictionary<string, ROS2.Publisher<sensor_msgs.msg.Imu>>();
         // Dictionary<string, dynamic> Subscribers = new Dictionary<string, dynamic>();
 
@@ -65,6 +65,7 @@ namespace Simulator.Bridge
         public ROS2ForUnitySVLBridgeInstance()
         {
             Ros2Handler = new ROS2Handle();
+            Publishers = new ROS2Publishers();
         }
 
         void WaitForRos2()
@@ -95,7 +96,6 @@ namespace Simulator.Bridge
 
         public void AddSubscriber<BridgeType>(string topic, Action<BridgeType> callback)
         {
-            return;
             WaitForRos2();
             var type = typeof(BridgeType);
             try
