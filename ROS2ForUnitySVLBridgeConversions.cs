@@ -209,23 +209,6 @@ namespace Simulator.Bridge
             return msg;
         }
 
-        public static sensor_msgs.msg.CompressedImage ConvertFrom(ImageData data)
-        {
-            var time = ConvertTime(data.Time);
-            var msg = new sensor_msgs.msg.CompressedImage()
-            {
-                Header = new std_msgs.msg.Header()
-                {
-                    Stamp = time,
-                    Frame_id = data.Frame,
-                },
-                Format = "jpeg"
-            };
-            msg.Data = new byte[data.Length]; //TODO (piotr.jarszek) initialize only when data len changes
-            System.Buffer.BlockCopy(data.Bytes, 0, msg.Data, 0, data.Length);
-            return msg;
-        }
-
         public static rosgraph_msgs.msg.Clock ConvertFrom(ClockData data)
         {
             var time = ConvertTime(data.Clock);

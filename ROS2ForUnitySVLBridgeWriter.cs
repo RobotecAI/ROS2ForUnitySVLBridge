@@ -36,6 +36,37 @@ namespace Simulator.Bridge
         }
     }
 
+    public class ROS2ForUnitySVLBridgeCompressedImageWriter
+    {
+        ROS2ForUnitySVLBridgeWriter<sensor_msgs.msg.CompressedImage> Writer;
+        sensor_msgs.msg.CompressedImage msg;
+
+        public ROS2ForUnitySVLBridgeCompressedImageWriter(ROS2ForUnitySVLBridgeInstance instance, string topic)
+        {
+            Writer = new ROS2ForUnitySVLBridgeWriter<sensor_msgs.msg.CompressedImage>(instance, topic);
+        }
+
+        public void Write(Data.ImageData data, Action completed)
+        {
+            if (msg == null || msg.Data.Length != data.Length)
+            {
+                var time = ROS2ForUnitySVLBridgeConversions.ConvertTime(data.Time);
+                msg = new sensor_msgs.msg.CompressedImage() {
+                    Header = new std_msgs.msg.Header()
+                    {
+                        Stamp = time,
+                        Frame_id = data.Frame,
+                    },
+                    Format = "jpeg"
+                };
+                msg.Data = new byte[data.Length];
+            }
+            
+            System.Buffer.BlockCopy(data.Bytes, 0, msg.Data, 0, data.Length);
+            Writer.Write(msg, completed);
+        }
+    }
+
     public class ROS2ForUnitySVLBridgePointCloudWriter
     {
         ROS2ForUnitySVLBridgeWriter<sensor_msgs.msg.PointCloud2> Writer;

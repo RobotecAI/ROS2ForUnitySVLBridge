@@ -29,7 +29,7 @@ namespace Simulator.Bridge
         {
             Debug.Log("Register native bridge!!");
 
-            // point cloud is special, as we use special writer for performance reasons
+            // point cloud and compressed image are special, as we use special writers for performance reasons
             plugin.AddType<PointCloudData>(typeof(PointCloudData).Name);
             plugin.AddPublisherCreator(
                 (instance, topic) =>
@@ -41,7 +41,17 @@ namespace Simulator.Bridge
                 }
             );
 
-            RegPublisher<ImageData, sensor_msgs.msg.CompressedImage>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
+            plugin.AddType<ImageData>(typeof(ImageData).Name);
+            plugin.AddPublisherCreator(
+                (instance, topic) =>
+                {
+                    var ros2Instance = instance as ROS2ForUnitySVLBridgeInstance;
+                    ros2Instance.AddPublisher<sensor_msgs.msg.CompressedImage>(topic);
+                    var writer = new ROS2ForUnitySVLBridgeCompressedImageWriter(ros2Instance, topic);
+                    return new Publisher<ImageData>((data, completed) => writer.Write(data, completed));
+                }
+            );
+
             RegPublisher<CameraInfoData, sensor_msgs.msg.CameraInfo>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
             RegPublisher<Detected3DObjectData, lgsvl_msgs.msg.Detection3DArray>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
             RegPublisher<Detected2DObjectData, lgsvl_msgs.msg.Detection2DArray>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);

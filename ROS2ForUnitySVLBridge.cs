@@ -57,9 +57,7 @@ namespace Simulator.Bridge
 
         
         ROS2Publishers Publishers;
-        // Dictionary<string, ROS2.Publisher<sensor_msgs.msg.Imu>> PublishersImu = new Dictionary<string, ROS2.Publisher<sensor_msgs.msg.Imu>>();
-        // Dictionary<string, dynamic> Subscribers = new Dictionary<string, dynamic>();
-
+        
         private ROS2Handle Ros2Handler;
 
         public ROS2ForUnitySVLBridgeInstance()
