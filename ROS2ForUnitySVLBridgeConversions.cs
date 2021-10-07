@@ -107,24 +107,13 @@ namespace Simulator.Bridge
 
         public static VehicleStateData ConvertTo(lgsvl_msgs.msg.VehicleStateData data)
         {
-            // Vehicle state sensor supports only Drive and Reverse. Drive is 0 and Reverse is 1
-            byte gear_corrected;
-            if (data.Current_gear == (byte)GearPosition.Drive) {
-                gear_corrected = 0;
-            } else if (data.Current_gear == (byte)GearPosition.Reverse) {
-                gear_corrected = 1;
-            } else {
-                // Just any value other than 0 and 1
-                gear_corrected = 3;
-            }
-
             return new VehicleStateData()
             {
                 Time = Convert(data.Header.Stamp),
                 Blinker = (byte) data.Blinker_state,
                 HeadLight = (byte) data.Headlight_state,
                 Wiper = (byte) data.Wiper_state,
-                Gear = gear_corrected,
+                Gear = (byte)data.Current_gear,
                 Mode = (byte) data.Vehicle_mode,
                 HandBrake = data.Hand_brake_active,
                 Horn = data.Horn_active,
