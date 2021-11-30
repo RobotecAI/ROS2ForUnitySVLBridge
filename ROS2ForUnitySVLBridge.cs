@@ -34,6 +34,8 @@ namespace Simulator.Bridge
     using Detection3DArrayDict = Dictionary<string, ROS2.Publisher<lgsvl_msgs.msg.Detection3DArray>>;
     using Detection2DArrayDict = Dictionary<string, ROS2.Publisher<lgsvl_msgs.msg.Detection2DArray>>;
     using CameraInfoDict = Dictionary<string, ROS2.Publisher<sensor_msgs.msg.CameraInfo>>;
+    using LaserScanDict = Dictionary<string, ROS2.Publisher<sensor_msgs.msg.LaserScan>>;
+    using DetectedRadarObjectsArrayDict = Dictionary<string, ROS2.Publisher<lgsvl_msgs.msg.DetectedRadarObjectArray>>;
 
     public class ROS2Publishers {
 
@@ -48,6 +50,8 @@ namespace Simulator.Bridge
         public Detection3DArrayDict Detection3DArrayPublishers = new Detection3DArrayDict();
         public Detection2DArrayDict Detection2DArrayPublishers = new Detection2DArrayDict();
         public CameraInfoDict CameraInfoPublishers = new CameraInfoDict();
+        public LaserScanDict LaserScanPublishers = new LaserScanDict();
+        public DetectedRadarObjectsArrayDict DetectedRadarObjectsArrayPublishers = new DetectedRadarObjectsArrayDict();
     }
 
     public partial class ROS2ForUnitySVLBridgeInstance : IBridgeInstance
@@ -187,6 +191,14 @@ namespace Simulator.Bridge
                 {
                     var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.CameraInfo>(topic);
                     Publishers.CameraInfoPublishers.Add(topic, publisher);
+                } else if (type == typeof(sensor_msgs.msg.LaserScan))
+                {
+                    var publisher = Ros2Handler.node.CreatePublisher<sensor_msgs.msg.LaserScan>(topic);
+                    Publishers.LaserScanPublishers.Add(topic, publisher);
+                } else if (type == typeof(lgsvl_msgs.msg.DetectedRadarObjectArray))
+                {
+                    var publisher = Ros2Handler.node.CreatePublisher<lgsvl_msgs.msg.DetectedRadarObjectArray>(topic);
+                    Publishers.DetectedRadarObjectsArrayPublishers.Add(topic, publisher);
                 }
                 return;
             } catch (InvalidOperationException e)
@@ -209,6 +221,8 @@ namespace Simulator.Bridge
                 else if(typeof(BridgeType) == typeof(lgsvl_msgs.msg.Detection3DArray)) {Publishers.Detection3DArrayPublishers[topic].Publish(msg as lgsvl_msgs.msg.Detection3DArray);}
                 else if(typeof(BridgeType) == typeof(lgsvl_msgs.msg.Detection2DArray)) {Publishers.Detection2DArrayPublishers[topic].Publish(msg as lgsvl_msgs.msg.Detection2DArray);}
                 else if(typeof(BridgeType) == typeof(sensor_msgs.msg.CameraInfo)) {Publishers.CameraInfoPublishers[topic].Publish(msg as sensor_msgs.msg.CameraInfo);}
+                else if(typeof(BridgeType) == typeof(sensor_msgs.msg.LaserScan)) {Publishers.LaserScanPublishers[topic].Publish(msg as sensor_msgs.msg.LaserScan);}
+                else if(typeof(BridgeType) == typeof(lgsvl_msgs.msg.DetectedRadarObjectArray)) {Publishers.DetectedRadarObjectsArrayPublishers[topic].Publish(msg as lgsvl_msgs.msg.DetectedRadarObjectArray);}
             }
         }
     }
