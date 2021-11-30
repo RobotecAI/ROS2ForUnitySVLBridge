@@ -101,7 +101,7 @@ namespace Simulator.Bridge
                 Acceleration = data.Acceleration_pct,
                 Braking = data.Braking_pct,
                 SteerAngle = UnityEngine.Mathf.Lerp(-1f, 1f, k),
-
+                TargetGear = (GearPosition)(int)data.Target_gear
             };
         }
 
