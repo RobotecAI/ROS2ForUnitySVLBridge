@@ -52,6 +52,7 @@ namespace Simulator.Bridge
                 }
             );
 
+            RegPublisher<LaserScanData, sensor_msgs.msg.LaserScan>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
             RegPublisher<CameraInfoData, sensor_msgs.msg.CameraInfo>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
             RegPublisher<Detected3DObjectData, lgsvl_msgs.msg.Detection3DArray>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
             RegPublisher<Detected2DObjectData, lgsvl_msgs.msg.Detection2DArray>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
@@ -61,6 +62,7 @@ namespace Simulator.Bridge
             RegPublisher<ImuData, sensor_msgs.msg.Imu>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
             RegPublisher<ClockData, rosgraph_msgs.msg.Clock>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
             RegPublisher<VehicleOdometryData, lgsvl_msgs.msg.VehicleOdometry>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
+            RegPublisher<DetectedRadarObjectData, lgsvl_msgs.msg.DetectedRadarObjectArray>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertFrom);
 
             RegSubscriber<VehicleStateData, lgsvl_msgs.msg.VehicleStateData>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertTo);
             RegSubscriber<VehicleControlData, lgsvl_msgs.msg.VehicleControlData>(plugin, ROS2ForUnitySVLBridgeConversions.ConvertTo);

@@ -101,7 +101,7 @@ namespace Simulator.Bridge
                 Acceleration = data.Acceleration_pct,
                 Braking = data.Braking_pct,
                 SteerAngle = UnityEngine.Mathf.Lerp(-1f, 1f, k),
-
+                TargetGear = (GearPosition)(int)data.Target_gear
             };
         }
 
@@ -156,6 +156,95 @@ namespace Simulator.Bridge
                         AngularVelocity = Convert(obj.Velocity.Angular),
                     }).ToArray(),
             };
+        }
+
+        public static lgsvl_msgs.msg.DetectedRadarObjectArray ConvertFrom(DetectedRadarObjectData data)
+        {
+            var time = ROS2ForUnitySVLBridgeConversions.ConvertTime(data.Time);
+            var msg = new lgsvl_msgs.msg.DetectedRadarObjectArray()
+            {
+                Header = new std_msgs.msg.Header()
+                {
+                    Stamp = time,
+                    Frame_id = data.Frame,
+                },
+                Objects = new lgsvl_msgs.msg.DetectedRadarObject[data.Data.Length]
+            };
+
+            int index = 0;
+            foreach (var obj in data.Data)
+            {
+                msg.Objects[index] = new lgsvl_msgs.msg.DetectedRadarObject
+                {
+                    Sensor_aim = ConvertToVector(obj.SensorAim),
+                    Sensor_right = ConvertToVector(obj.SensorRight),
+                    Sensor_position = ConvertToPoint(obj.SensorPosition),
+                    Sensor_velocity = ConvertToVector(obj.SensorVelocity),
+                    Sensor_angle = obj.SensorAngle,
+                    Object_position = ConvertToPoint(obj.Position),
+                    Object_velocity = ConvertToVector(obj.Velocity),
+                    Object_relative_position = ConvertToPoint(obj.RelativePosition),
+                    Object_relative_velocity = ConvertToVector(obj.RelativeVelocity),
+                    Object_collider_size = ConvertToVector(obj.ColliderSize),
+                    Object_state = (byte)obj.State,
+                    New_detection = obj.NewDetection,
+                };
+                index++;
+            }
+
+            return msg;
+        }
+
+        public static sensor_msgs.msg.LaserScan ConvertFrom(LaserScanData data)
+        {
+            var count = data.Points.Length;
+
+            if (data.RangesCache == null || data.RangesCache.Length != count)
+                data.RangesCache = new float[count];
+
+            if (data.IntensitiesCache == null || data.IntensitiesCache.Length != count)
+                data.IntensitiesCache = new float[count];
+
+            for (var i = 0; i < count; ++i)
+            {
+                var point = data.Points[i];
+
+                var pos = new UnityEngine.Vector3(point.x, point.y, point.z);
+                var intensity = point.w * 255f;
+
+                pos = data.Transform.MultiplyPoint3x4(pos);
+                var distance = pos.magnitude;
+                if (distance < data.RangeMin || distance > data.RangeMax)
+                {
+                    distance = float.PositiveInfinity;
+                    intensity = 0;
+                }
+
+                var iOut = count - 1 - i;
+                data.RangesCache[iOut] = distance;
+                data.IntensitiesCache[iOut] = intensity;
+            }
+
+            var time = ROS2ForUnitySVLBridgeConversions.ConvertTime(data.Time);
+            var msg = new sensor_msgs.msg.LaserScan()
+            {
+                Header = new std_msgs.msg.Header()
+                {
+                    Stamp = time,
+                    Frame_id = data.Frame,
+                },
+                Angle_min = data.MinAngle,
+                Angle_max = data.MaxAngle,
+                Angle_increment = data.AngleStep,
+                Time_increment = data.TimeIncrement,
+                Scan_time = data.ScanTime,
+                Range_min = data.RangeMin,
+                Range_max = data.RangeMax,
+                Ranges = data.RangesCache,
+                Intensities = data.IntensitiesCache
+            };
+
+            return msg;
         }
 
         public static sensor_msgs.msg.CameraInfo ConvertFrom(CameraInfoData data)
