@@ -335,8 +335,8 @@ namespace Simulator.Bridge
                 },
 
                 Orientation = orientation,
-                Angular_velocity = new geometry_msgs.msg.Vector3() { X = data.AngularVelocity.z, Y = -data.AngularVelocity.x, Z = data.AngularVelocity.y },
-                Linear_acceleration = new geometry_msgs.msg.Vector3() { X = data.Acceleration.z, Y = -data.Acceleration.x, Z = data.Acceleration.y }
+                Angular_velocity = new geometry_msgs.msg.Vector3() { X = data.AngularVelocity.x, Y = data.AngularVelocity.y, Z = data.AngularVelocity.z },
+                Linear_acceleration = new geometry_msgs.msg.Vector3() { X = data.Acceleration.x, Y = data.Acceleration.y, Z = data.Acceleration.z }
             };
 
             for (int i = 0; i < 9; i++)
