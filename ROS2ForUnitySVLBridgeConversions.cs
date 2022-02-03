@@ -176,6 +176,7 @@ namespace Simulator.Bridge
             {
                 msg.Objects[index] = new lgsvl_msgs.msg.DetectedRadarObject
                 {
+                    Id = obj.Id,
                     Sensor_aim = ConvertToVector(obj.SensorAim),
                     Sensor_right = ConvertToVector(obj.SensorRight),
                     Sensor_position = ConvertToPoint(obj.SensorPosition),
